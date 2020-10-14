@@ -32,8 +32,8 @@ export default {
 .case.letter {
   z-index: 1;
 }
-.found {
-  background-color: rgba(255, 255, 255, 0.75);
+.case.letter.found {
+  background-color: rgba(255, 255, 255, 0.5);
   z-index: 10;
 }
 .case.dash-1 {

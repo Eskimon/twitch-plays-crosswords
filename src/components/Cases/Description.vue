@@ -38,7 +38,6 @@ export default {
   },
   methods: {
     triggerGuess(idx) {
-      console.log(this.value.desc[idx]);
       let prompt = this.value.desc[idx].replaceAll('–<br/>', '').replaceAll('–', '').replaceAll('<br/>', ' ');
       this.$emit('guess', {def: prompt, idx: this.getIdx(this.value.pos, this.value.arrow[idx])});
     },
@@ -96,64 +95,77 @@ export default {
 
 .cellId {
   position: absolute;
-  top: -30%;
-  left: -25%;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  font-size: 12px;
+  padding: 4px;
+  text-align: left;
+  font-size: 11px;
   color: #666;
-}
-
-.arrow-2 .cellId, .arrow-3 .cellId {
-  top: 70%;
+  line-height: normal;
 }
 
 .arrow {
   position: absolute;
   width: 100%;
+  height: 100%;
   z-index: 2;
   font-size: 16px;
   color: darkgray;
+  display: flex;
+  align-items: flex-start;
 }
 
 .arrow-0 {
   left: 100%;
-  text-align: left;
+  justify-content: center;
 }
-.arrow-0::before {
+.arrow-0::after {
+  position: absolute;
+  left: 0;
   content: '→';
 }
 
 .arrow-1 {
   left: 100%;
-  text-align: left;
+  justify-content: center;
 }
-.arrow-1::before {
+.arrow-1::after {
+  position: absolute;
+  left: 0;
   content: '↴';
 }
 
 .arrow-2 {
-  top: calc(50% + 7px);
-  text-align: center;
+  top: 100%;
 }
-.arrow-2::before {
+.arrow-2 .cellId {
+  align-self: center;
+}
+.arrow-2::after {
   content: '↓';
+  line-height: normal;
+  width: 100%;
+  text-align: center;
 }
 
 .arrow-3 {
-  top: calc(50% + 7px);
-  text-align: center;
+  top: 100%;
 }
-.arrow-3::before {
+.arrow-3 .cellId {
+  align-self: center;
+}
+.arrow-3::after {
   content: '↳';
+  line-height: normal;
+  width: 100%;
+  text-align: center;
 }
 
 .arrow-4 {
   left: 100%;
-  text-align: left;
+  justify-content: center;
 }
-.arrow-4::before {
+.arrow-4::after {
+  position: absolute;
+  left: 0;
   content: '→';
 }
 </style>
