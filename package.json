@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "fetch-inject": "^2.0.4",
+    "tmi.js": "^1.5.0",
     "vue": "^2.6.11"
   },
   "devDependencies": {
@@ -33,7 +34,9 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "no-debugger": "off"
+    }
   },
   "browserslist": [
     "> 1%",

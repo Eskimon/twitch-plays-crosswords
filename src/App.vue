@@ -1,13 +1,14 @@
 <template>
   <div id="app">
-    <button @click="loadGrid">Charger une grille</button>
-
-    <grid v-if="ready"></grid>
+    <div class="playground">
+      <grid></grid>
+      <div class="score"></div>
+    </div>
   </div>
 </template>
 
 <script>
-import Grid from './components/grid.vue'
+import Grid from './components/mfgrid.vue'
 
 export default {
   name: 'App',
@@ -29,6 +30,7 @@ export default {
 
   },
   methods: {
+    /*
     loadGrid() {
       this.ready = false;
       this.loadScript('./fixtures/grille.mcj', this.parseGrid);
@@ -54,9 +56,14 @@ export default {
         // Fire the loading
         head.appendChild(script);
     }
+    */
   },
 }
 </script>
 
 <style>
+.playground {
+  display: grid;
+  grid-template-columns: 75% 25%;
+}
 </style>
