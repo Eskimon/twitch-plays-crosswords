@@ -2,6 +2,8 @@
   <div
     class="case letter"
     :class="[value.dashed ? `dash-${value.dashed}` : '', value.available ? '' : 'found']"
+    :style="`color: ${value.color}`"
+    :title="value.player"
   >
     {{ value.available ? '' : value.value }}
   </div>
@@ -30,6 +32,10 @@ export default {
 
 <style>
 .case.letter {
+  z-index: 1;
+  font-family: monospace;
+  font-size: 25px;
+  background-color: rgba(255, 255, 255, 1);
   z-index: 1;
 }
 .case.letter.found {

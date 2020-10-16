@@ -20,6 +20,8 @@ Case.prototype.setDotted = function (dots) {
 function LetterCase(Position, Content) {
   this.pos = Position;
   this.value = Content;
+  this.color = '#000000';
+  this.player = '';
   this.type = enums.CaseType.Letter;
 
   this.available = true;

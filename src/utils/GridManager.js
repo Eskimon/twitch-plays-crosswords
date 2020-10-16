@@ -1,7 +1,6 @@
 /*global gamedata*/  // Trick to make eslint believe that gamedata exist (will be load from parsed file)
 
-var config  = require('./config.json').GRID_PROVIDER,
-    enums   = require('./enums'),
+var enums   = require('./enums'),
     Case    = require('./Case');
 
 var _grid           = null, // the grid itself !
@@ -139,83 +138,7 @@ function parseGrid(callback, serverText) {
     let nb = gamedata.spountzH[i][0] + (gamedata.spountzH[i][1]-1)*grid.nbColumns;
     grid.cases[nb - 1].dashed = 1;
   }
-  /*
-  /////////////////////OLD////////////////////////////////////
-  // Initial sort. Isolate each "line" by spliting on '\n' char
-  stArray = serverText.split('&');
 
-  // Then parse each line
-  length = stArray.length;
-  for (i = 0; i < length; i++) {
-
-    // Get key / value for this line
-    info = stArray[i].split('=');
-
-    // If this line describe a grid line, insert new line in our grid
-    if (info[0].indexOf('lign') > -1) {
-
-      for (j in info[1]) {
-        type = getCaseType(info[1][j]);
-
-        if (type == enums.CaseType.Letter) {
-          grid.cases.push(new Case.LetterCase(currentCase++, info[1][j]));
-          _nbLetters++;
-        }
-        else if (type == enums.CaseType.Description)
-          grid.cases.push(new Case.DescriptionCase(currentCase++, info[1][j]));
-        else
-          grid.cases.push(new Case.EmptyCase(currentCase++));
-      };
-
-      // Update col & line counters
-      if (grid.nbLines == 0)
-        grid.nbLines = info[1].length;
-      grid.nbColumns++;
-    }
-    // If this line is a description, add it
-    else if (info[0].indexOf('tx') > -1) {
-      insertDescription(grid, info[1]);
-    }
-    // If this line set a dotted frame, apply the effect to the right frame
-    else if (info[0].indexOf('pointillev') > -1 || info[0].indexOf('pointilleh') > -1) {
-      grid.cases[(parseInt(info[0].substr(10), 10)) - 1].dashed = info[1];
-    }
-    else if (info[0].indexOf('pointille') > -1) {
-      grid.cases[(parseInt(info[0].substr(9), 10)) - 1].dashed = info[1];
-    }
-    // Else try to deal with the line key
-    else {
-      switch (info[0]) {
-        case 'nomjeu':
-        case 'coul':
-        case 'nbphotos':
-        case 'casephotos':
-        case 'fin':
-        case '?':
-        case '':
-          // Ignore useless tags
-          break;
-
-        case 'niveau':
-          _wordsPoints = info[1];
-          grid.nbWords = _wordsPoints.length;
-          _gridInfos.nbWords = _wordsPoints.length;
-          break;
-
-        case 'themecase':
-          _theme = info[1];
-          break;
-
-        case 'legende':
-          _gridInfos.level = parseInt(info[1][info[1].length - 1], 10);
-          break;
-
-        default:
-          console.info('\t[GRIDMANAGER] Unknow grid tag [' + info[0] + ']');
-      }
-    }
-  };
-  */
   // Once the entire grid is retreived, place arrows
   placeArrows(grid);
 
@@ -246,12 +169,15 @@ function placeArrows(grid) {
           grid.cases[i].arrow[0] = enumArrow.BottomRight;
           break;
 
+        case 'e':
         case 'f':
         case 'g':
         case 'h':
+        case 'i':
           grid.cases[i].arrow[0] = enumArrow.Right;
           grid.cases[i].arrow[1] = enumArrow.Bottom;
           break;
+        case 'j':
         case 'k':
         case 'l':
         case 'm':
@@ -259,13 +185,15 @@ function placeArrows(grid) {
           grid.cases[i].arrow[0] = enumArrow.RightBottom;
           grid.cases[i].arrow[1] = enumArrow.Bottom;
           break;
+        case 'o':
         case 'p':
         case 'q':
-        case 's':
         case 'r':
+        case 's':
           grid.cases[i].arrow[0] = enumArrow.Right;
           grid.cases[i].arrow[1] = enumArrow.BottomRight;
           break;
+        case 'u':
         case 'v':
         case 'w':
           grid.cases[i].arrow[0] = enumArrow.RightBottom;
@@ -279,34 +207,6 @@ function placeArrows(grid) {
   }
 }
 
-function getGridAddress(commandArgv) {
-  var gridNumber,
-      today;
-
-  switch (commandArgv) {
-    // No number given, load day grid
-    case 0:
-    case -1:
-      console.info('\n\t[GRIDMANAGER] Load day grid');
-      today = new Date();
-      gridNumber = ("0"+today.getDate()).substr(-2) + ("0"+(today.getMonth()+1)).substr(-2) + (""+today.getFullYear()).substr(-2)
-      break;
-
-    // Load the specified grid
-    default:
-      console.info('\n\t[GRIDMANAGER] Load specific grid');
-      gridNumber = commandArgv;
-      break;
-  }
-
-  // Set provider name
-  _gridInfos.provider = config.PROVIDER_NAME;
-  _gridInfos.id = gridNumber;
-
-  // Return the grid address
-  return (config.PROVIDER_ADDR + gridNumber.toString() + config.PROVIDER_EXTENSION);
-}
-
 /* PUBLIC METHODS */
 
 /*
@@ -314,7 +214,7 @@ function getGridAddress(commandArgv) {
 * @param  {Object}  wordObj   Client word object
 * @return {Int}    Points scored by the player. If return 0, it's just the wrong word :)
 */
-GridManager.prototype.checkPlayerWord = function (wordObj) {
+GridManager.prototype.checkPlayerWord = function (wordObj, color, player) {
   var jump      = (wordObj.axis == 0) ? 1 : _grid.nbColumns,
       wordSize  = wordObj.word.length,
       points    = 0,
@@ -351,6 +251,8 @@ GridManager.prototype.checkPlayerWord = function (wordObj) {
   for (i = 0; i < wordSize; i++) {
     if (_grid.cases[index].available == true) {
       _grid.cases[index].available = false;
+      _grid.cases[index].color = color;
+      _grid.cases[index].player = player;
       points++;
     }
     index += jump;
@@ -440,8 +342,7 @@ GridManager.prototype.getAccomplishmentRate = function (playerPoints, nbPlayers)
 * @param {Int}      gridNumber    The grid number ID to request to the provider
 * @param {Function} callback      The callback to raise either on success or error !
 */
-GridManager.prototype.retreiveAndParseGrid = function (gridNumber, callback) {
-  var gridAddr = getGridAddress(gridNumber);    // Retreive the grid URL, build from provider infos and ID requested
+GridManager.prototype.retreiveAndParseGrid = function (gridAddr, callback) {
 
   console.info('\n\t[GRIDMANAGER] Try to load ' + gridAddr);
 

@@ -1,186 +1,161 @@
 <template>
-  <div class="playarea">
-    <div class="definitions">
-      <input type="text" v-model="guess" @keyup.enter="tryWord('streamer')" ref="guessBox">
-      <h4>Horizontal</h4>
-      <ul class="definitions">
-        <li
-          v-for="def in definitions.h"
-          :key="def.key"
-          :style="`color: ${def.color}`"
-          :class="def.found ? 'striked' : ''"
-          @click="guess = def.key + ' '; guessFocus()"
-        >
-          {{ def.key }} : {{ def.def }}
-        </li>
-      </ul>
-      <h4>Vertical</h4>
-      <ul>
-        <li
-          v-for="def in definitions.v"
-          :key="def.key"
-          :style="`color: ${def.color}`"
-          :class="def.found ? 'striked' : ''"
-          @click="guess = def.key + ' '; guessFocus()"
-        >
-          {{ def.key }} : {{ def.def }}
-        </li>
-      </ul>
+  <div class="playarea" ref="playarea">
+    <div class="gameInfo">
+      <strong class="error" v-show="error">{{ error }}</strong>
+      <span>Temps écoulé <strong>{{ elapsed }}</strong></span>
+      <span>Mots restants <strong>{{ remaining }}</strong></span>
     </div>
-
-    <div id="grille" :style="getGridStyle">
-      <template v-for="y in size.v">
-        <template v-for="x in size.h">
-          <div
-            :key="`y${y-1}-x${x-1}`"
-            class="cell"
-            :class="(solution[((y - 1) * size.h) + (x - 1)].letter === 'x') ? 'empty' : ''"
-          >
-            {{ solution[((y - 1) * size.h) + (x - 1)].found ? solution[((y - 1) * size.h) + (x - 1)].letter : '' }}
-          </div>
-        </template>
+    <div
+      v-if="grid"
+      id="grille"
+      :style="getGridStyle"
+    >
+      <template v-for="cell in grid.cases">
+        <case-letter v-if="cell.type === 2" :value="cell" :key="`case-${cell.pos}`"></case-letter>
+        <case-description v-if="cell.type === 3" :value="cell" :grid="grid" :key="`case-${cell.pos}`" @guess="tryGuess"></case-description>
+        <case-empty v-if="cell.type === 4" :key="`case-${cell.pos}`"></case-empty>
       </template>
     </div>
-
   </div>
 </template>
 
 <script>
+import panzoom from 'panzoom'
+
+import tools from '../utils/tools'
+import GridManager from '../utils/GridManager'
+import CaseDescription from './Cases/Description'
+import CaseEmpty from './Cases/Empty'
+import CaseLetter from './Cases/Letter'
 
 export default {
   name: 'grid',
+  props: ['grid_id', 'player'],
   components: {
+    CaseDescription,
+    CaseEmpty,
+    CaseLetter,
   },
   data() {
     return {
+      error: '',
       guess: '',
-      words: {
-        h: [],
-        v: [],
-      },
-      size: {
-        h: 0,
-        v: 0,
-      },
-      definitions: {
-        h: [],
-        v: [],
-      },
-      solution: [],
+      gm: null,
+      grid: null,
+
+      remaining: 0,
+      elapsedRaw: 0,
+      startedAt: null,
+      panzoom: null,
     };
   },
   created() {
-    this.size.h = window.gamedata.nbcaseslargeur;
-    this.size.v = window.gamedata.nbcaseshauteur;
+    if(this.grid_id) {
+      this.gm = new GridManager();
+      this.gm.retreiveAndParseGrid(this.grid_id, (grid) => {
+        if (grid == null) {
+          // If an error occurs, exit
+          this.error = 'La grille n\'a pas pu être récupérée';
+          console.error('[ERROR] Cannot retreive grid.');
+        } else {
+          this.refreshGrid();
 
-    for(let i=0; i < window.gamedata.grille.length; i++) {
-      for(let j=0; j < window.gamedata.grille[i][0].length; j++) {
-        this.solution.push({
-          letter: window.gamedata.grille[i][0].charAt(j),
-          found: false,
-        })
-      }
-    }
+          this.$nextTick(() => {
+            let area = document.getElementById('grille');
+            this.panzoom = panzoom(area, { autocenter: false, bounds: true });
+          })
 
-    // Fill in definitions array (horizontal)
-    for(let i=0; i<this.size.v; i++) {
-      let defs = window.gamedata.definitionsh[i];
-      for(let j=0; j < defs.length; j++) {
-        this.definitions.h.push({
-          key: 'h' + (i + 1) + String.fromCharCode(97 + j),
-          def: window.gamedata.definitionsh[i][j],
-          found: false,
-          color: '#000000',
-          solution: '',
-          starts_at: 0,
-        })
-      }
-    }
-
-    // Fill in definitions array (vertical)
-    for(let i=0; i<this.size.h; i++) {
-      let defs = window.gamedata.definitionsv[i];
-      for(let j=0; j < defs.length; j++) {
-        this.definitions.v.push({
-          key: 'h' + (i + 1) + String.fromCharCode(97 + j),
-          def: window.gamedata.definitionsv[i][j],
-          found: false,
-          color: '#000000',
-          solution: '',
-        })
-      }
+          this.startedAt = Date.now();
+          setInterval(() => {
+            this.elapsedRaw = Math.floor((Date.now() - this.startedAt) / 1000);
+          }, 200);
+        }
+      });
     }
   },
   mounted() {
-    console.log('grid rendered')
   },
   computed: {
+    elapsed() {
+      let seconds = this.elapsedRaw % 60;
+      let minutes = Math.floor(this.elapsedRaw / 60);
+      minutes = ('0' + minutes.toString(10)).slice(-2);
+      seconds = ('0' + seconds.toString(10)).slice(-2);
+      return `${minutes}:${seconds}`;
+    },
     getGridStyle() {
+      if(!this.grid) {
+        return {}
+      }
       return {
-        'grid-template-columns': `repeat(${this.size.h}, 50px)`,
-        'grid-template-rows': `repeat(${this.size.v}, 50px)`,
+        'grid-template-columns': `repeat(${this.grid.nbColumns}, 50px)`,
+        'grid-template-rows': `repeat(${this.grid.nbLines}, 50px)`,
       }
     }
   },
   methods: {
-    guessFocus() {
-      this.$refs['guessBox'].focus();
+    refreshGrid() {
+      this.grid = this.gm.getGrid();
+      this.remaining = this.gm.getNbRemainingWords();
     },
-    tryWord(player) {
-      console.log(player);
-      // TODO add some feedback on action
-      let answer = this.guess.toLowerCase();
-      if(answer.charAt(0) != 'h' && answer.charAt(0) != 'v')
-        return;
-      let idx = answer.indexOf(' ');
-      let key = answer.substring(0, idx);
-      answer = answer.substring(idx + 1).slugify().toUpperCase();
-
-      let isHorizontal = (key.charAt(0) === 'h');
-      let key_id = parseInt(key.substr(1));  // hacky because will properly remove the a,b,c from last char
-      let subid = key.substr(String(key_id).length + 1).charCodeAt(0) - 97;
-
-      console.log(isHorizontal, key_id, subid, answer);
-      let fail = false;
-      if(isHorizontal) {
-        // explore horizontally?
-        // if subid > 0, find the start place
-        let start = 0;
-        if(subid > 0) {
-          for(let i=1; i<this.size.h; i++) {
-            let idx = ((key_id - 1) * this.size.h) + i;
-            if(this.solutions[idx].letter == 'x')
-              start = i;
-          }
-        }
-        // No check if the word is right
-        for(let i=0; i<answer.length; i++) {
-          let idx = ((key_id - 1) * this.size.h) + i + start;
-          if(this.solution[idx].letter != answer.getCharAt(i)) {
-            fail = true;
-            break;
-          }
-        }
-
-      } else {
-        // explore verticcaly
-
+    tryGuess(args) {
+      let guess = prompt(args.def);
+      if(guess)
+        this.checkWord(this.player, guess, args.idx, '#ffffff');
+    },
+    checkWord(player, guess, idx, color) {
+      guess = tools.slugify(guess).toUpperCase();
+      console.log(`checking ${guess} at place ${idx}`)
+      let wordObj = {
+        word: guess,
+        axis: 0,
+        start: idx,
       }
-
-      if(!fail) {
-        console.log("fail");
-      } else {
-        console.log("not fail");
+      let points = this.gm.checkPlayerWord(wordObj, color, player);
+      if(points > 0) {
+        // Word guessed !!
+        this.refreshGrid();
+        this.$emit('wordfound', {player, points, color});
+        return;
+      }
+      // Not guessed, try vertical
+      wordObj.axis = 1;
+      points = this.gm.checkPlayerWord(wordObj, color, player);
+      if(points > 0) {
+        // Word guessed !!
+        this.refreshGrid();
+        this.$emit('wordfound', {player, points, color});
+        return;
       }
     }
   },
+  destroyed() {
+    if(this.panzoom) {
+      this.panzoom.dispose();
+    }
+  }
 }
 </script>
 
 <style>
+.error {
+  color: red;
+}
+
 .playarea {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  overflow: hidden;
+}
+
+.gameInfo {
+  margin-bottom: 10px;
+  z-index: 20;
+}
+
+.gameInfo span {
+  margin: 0 10px;
 }
 
 #grille {
@@ -189,17 +164,7 @@ export default {
   text-align: center;
 }
 
-.cell {
-  border: 1px solid black;
-}
-
-.cell.empty {
-  background: black;
-  cursor: not-allowed;
-}
-
-ul.definitions li {
-  list-style-type: none;
-  cursor: pointer;
+.case {
+  border: 1px solid #bbb;
 }
 </style>

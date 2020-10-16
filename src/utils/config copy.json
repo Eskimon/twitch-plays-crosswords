@@ -1,8 +1,0 @@
-{
-  "GRID_PROVIDER": {
-    "PROVIDER_NAME": "20 Minutes",
-    "PROVIDER_ADDR": "https://rcijeux.fr/drupal_game/20minutes/grids/",
-    "PROVIDER_EXTENSION": ".mfj",
-    "PROVIDER_LIST_GAMES": "https://rcijeux.fr/drupal_game/20minutes/menu/js/jeux_mfleches.js"
-  }
-}
