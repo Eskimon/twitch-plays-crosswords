@@ -37,15 +37,16 @@ export default {
   font-size: 25px;
   background-color: rgba(255, 255, 255, 1);
   z-index: 1;
+  color: #000000;
 }
 .case.letter.found {
   background-color: rgba(255, 255, 255, 0.5);
   z-index: 10;
 }
 .case.dash-1 {
-  border-bottom: 1px dashed lightgray;
+  border-bottom: 1px dashed #ff0000;
 }
 .case.dash-2 {
-  border-right: 1px dashed darkgray;
+  border-right: 1px dashed #ff0000;
 }
 </style>

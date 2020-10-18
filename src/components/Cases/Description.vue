@@ -75,7 +75,7 @@ export default {
   z-index: 5;
 }
 .def span + span {
-  border-top: solid 1px #333;
+  border-top: solid 1px #ff0000;
 }
 .defsize-1 {
   line-height: 48px;
@@ -108,7 +108,7 @@ export default {
   height: 100%;
   z-index: 2;
   font-size: 16px;
-  color: darkgray;
+  color: #ff0000;
   display: flex;
   align-items: flex-start;
 }
@@ -144,6 +144,7 @@ export default {
   line-height: normal;
   width: 100%;
   text-align: center;
+  line-height: 12px;
 }
 
 .arrow-3 {
@@ -157,6 +158,7 @@ export default {
   line-height: normal;
   width: 100%;
   text-align: center;
+  line-height: 12px;
 }
 
 .arrow-4 {

@@ -18,6 +18,15 @@
             {{ player[0] }} <small>({{ scoreboard[player[0]].score }})</small>
           </li>
         </ul>
+        <iframe 
+          frameborder="0"
+          id="tchat"
+          scrolling="true"
+          :src="`https://www.twitch.tv/embed/${channel}/chat?parent=${getDomain}&darkpopout`"
+          height="60%"
+          width="100%"
+        >
+        </iframe>
       </div>
     </div>
   </div>
@@ -72,6 +81,9 @@ export default {
   },
   mounted() {},
   computed: {
+    getDomain() {
+      return window.location.hostname;
+    },
     getScoreList() {
       // Return score in sorted order
       let items = Object.keys(this.scoreboard).map((key) => {
@@ -150,13 +162,13 @@ export default {
         } else if(message === '!grille g1') {
           this.gridKey = this.getGridAddr(1, true, false);
         } else if(message === '!grille 4') {
-          this.gridKey = this.getGridAddr(4, true, false);
+          this.gridKey = this.getGridAddr(4, false, false);
         } else if(message === '!grille 3') {
-          this.gridKey = this.getGridAddr(3, true, false);
+          this.gridKey = this.getGridAddr(3, false, false);
         } else if(message === '!grille 2') {
-          this.gridKey = this.getGridAddr(2, true, false);
+          this.gridKey = this.getGridAddr(2, false, false);
         } else if(message === '!grille 1') {
-          this.gridKey = this.getGridAddr(1, true, false);
+          this.gridKey = this.getGridAddr(1, false, false);
         } else if(message === '!grille gt') {
           this.gridKey = this.getGridAddr(0, true, true);
         } else if(message === '!grille t') {
@@ -198,8 +210,15 @@ export default {
       }
       let gridId = '_' + Math.floor(rmin + (Math.random() * Math.floor(rmax - rmin))).toString();
       let address = this.config.PROVIDER_ADDR + root + force + gridId + this.config.PROVIDER_EXTENSION;
+      // Update url
+      this.updateURL(gridId, giant, themed, force);
       return address;
-    }
+    },
+    updateURL(gridId, giant, themed, force) {
+      let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?channel=${this.channel}`;
+      newurl += `&grid=${gridId}&giant=${giant}&themed=${themed}&force=${force}`;
+      window.history.pushState({ path:newurl }, '', newurl);
+    },
   },
 }
 </script>
@@ -208,11 +227,18 @@ export default {
 body {
   margin: 0;
   overflow: hidden;
+  font-family: sans-serif;
 }
 
 #app {
   width: 100vw;
   height: 100vh;
+}
+
+#tchat {
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 
 .playground {
@@ -223,6 +249,7 @@ body {
 
 .score {
   background: #18181b;
+  position: relative;
 }
 
 .score ul li {

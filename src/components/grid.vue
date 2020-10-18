@@ -101,7 +101,7 @@ export default {
     tryGuess(args) {
       let guess = prompt(args.def);
       if(guess)
-        this.checkWord(this.player, guess, args.idx, '#ffffff');
+        this.checkWord(this.player, guess, args.idx, '#000000');
     },
     checkWord(player, guess, idx, color) {
       guess = tools.slugify(guess).toUpperCase();
@@ -165,6 +165,6 @@ export default {
 }
 
 .case {
-  border: 1px solid #bbb;
+  border: 1px solid #ff0000;
 }
 </style>
