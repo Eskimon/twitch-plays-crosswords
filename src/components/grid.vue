@@ -94,6 +94,16 @@ export default {
     }
   },
   methods: {
+    konami() {
+      // Cheat code to reveal all first letter
+      if(!this.grid)
+        return;
+      let positions = document.getElementsByClassName('cellId');
+      positions.forEach(pos => {
+        this.gm.forceReveal(parseInt(pos.textContent), '#000000');
+      });
+      this.grid = this.gm.getGrid();
+    },
     refreshGrid() {
       this.grid = this.gm.getGrid();
       this.remaining = this.gm.getNbRemainingWords();
@@ -101,7 +111,7 @@ export default {
     tryGuess(args) {
       let guess = prompt(args.def);
       if(guess)
-        this.checkWord(this.player, guess, args.idx, '#000000');
+        this.checkWord(this.player, guess, args.idx, '#7F7F7F');
     },
     checkWord(player, guess, idx, color) {
       guess = tools.slugify(guess).toUpperCase();

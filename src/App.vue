@@ -18,7 +18,7 @@
             {{ player[0] }} <small>({{ scoreboard[player[0]].score }})</small>
           </li>
         </ul>
-        <iframe 
+        <iframe
           frameborder="0"
           id="tchat"
           scrolling="true"
@@ -59,13 +59,14 @@ export default {
     this.konami.listen(() => {
       // Easter egg!!!
       console.log( "konami code!" );
+      this.$refs.grid.konami();
     });
 
+    // Load score from local storage
+    this.loadScore();
     // Get channel
     let urlParams = new URLSearchParams(window.location.search);
     this.channel = urlParams.get('channel');
-    // Load score from local storage
-    this.loadScore();
     // Connect to chat
     const tmi = require('tmi.js');
     this.client = new tmi.Client({
@@ -79,7 +80,15 @@ export default {
     this.addListeners();
     this.client.connect();
   },
-  mounted() {},
+  mounted() {
+    let urlParams = new URLSearchParams(window.location.search);
+    // Try to load new grid if any in URL
+    let url_force = parseInt(urlParams.get('force')) || 0;
+    let url_themed = urlParams.get('themed') === 'true';
+    let url_giant = urlParams.get('giant') === 'true';
+    let url_grid = parseInt(urlParams.get('grid')) || null;
+    this.gridKey = this.getGridAddr(url_force, url_giant, url_themed, url_grid);
+  },
   computed: {
     getDomain() {
       return window.location.hostname;
@@ -183,7 +192,7 @@ export default {
         this.$refs.grid.checkWord(name, guess, parseInt(message), userstate.color);
       }
     },
-    getGridAddr(force=1, giant=false, themed=false) {
+    getGridAddr(force=1, giant=false, themed=false, defaultId=null) {
       let root = '';
       let rmin = 0;
       let rmax = 0;
@@ -208,10 +217,13 @@ export default {
         rmax = this.config["GRIDS"]["regular"]["ranges"][force][1];
         root = this.config["GRIDS"]["regular"]["root"];
       }
-      let gridId = '_' + Math.floor(rmin + (Math.random() * Math.floor(rmax - rmin))).toString();
+      let gridId = defaultId;
+      if(!gridId)
+        gridId = Math.floor(rmin + (Math.random() * Math.floor(rmax - rmin))).toString();
+      gridId = '_' + gridId;
       let address = this.config.PROVIDER_ADDR + root + force + gridId + this.config.PROVIDER_EXTENSION;
+      this.updateURL(gridId.substr(1), giant, themed, force);
       // Update url
-      this.updateURL(gridId, giant, themed, force);
       return address;
     },
     updateURL(gridId, giant, themed, force) {

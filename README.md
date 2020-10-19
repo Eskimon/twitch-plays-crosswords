@@ -1,5 +1,7 @@
 # Twitch plays mots fléchés
 
+## Présentation
+
 Ce petit projet, surtout fait pour rigoler avec les gens de canardPC, peut-être utilisé directement à l'adresse <https://eskimon.fr/twitch-plays-crosswords/>.
 Le principe est simple, une grille de mots-fléchés se charge et vous pouvez alors la remplir en cliquant sur les définitions. Si le mot est juste, il apparait alors dans la grille.
 MAIS vous devez aussi composer avec vos spectateurs ! En effet, la grille peut-être rempli de manière "communautaire" via Twitch. Pour cela, ajouter le paramètre `channel` avec le nom de votre chaîne Twitch.
@@ -10,11 +12,15 @@ Par exemple quand je joue sur ma chaine j'accède à l'adresse suivante :
 
 Et si vous voulez jouer mais sans streamer, c'est pareil ! Le chat Twitch est toujours accessible mais quand il n'y aucune live en cours !
 
-## Participants
+Petit trailer :
+
+[![Trailer](https://img.youtube.com/vi/SGnJBQcSnmQ/0.jpg)](https://www.youtube.com/watch?v=SGnJBQcSnmQ)
+
+### Participants
 
 Pour les spectateurs c'est très simple. Pour répondre il suffit de taper le numéro de la définition tel qu'affiché sur la grille puis le mot que l'on pense avoir deviné. Si le mot est juste, le participant gagne alors autant de points que de lettres trouvées et qui n'étaient pas déjà présentes sur la grille.
 
-## Commandes utiles
+### Commandes utiles
 
 Voici quelques commandes d'administration de la grille :
 
@@ -47,3 +53,8 @@ npm run build
 ```
 npm run lint
 ```
+
+
+### Remerciements
+
+Certaines parties du code ont été inspiré de ce dépôt : <https://github.com/benVigie/mots>

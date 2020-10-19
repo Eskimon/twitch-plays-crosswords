@@ -212,6 +212,20 @@ function placeArrows(grid) {
 /* PUBLIC METHODS */
 
 /*
+* Reveal a cell (if it is a letter)
+* @param  {int}  poisition   Position of the letter
+*/
+GridManager.prototype.forceReveal = function (position, color) {
+  if(_grid.cases[position].type === 2) {
+    if(_grid.cases[position].available) {
+      _grid.cases[position].available = false;
+      _grid.cases[position].color = color;
+      _grid.cases[position].player = '';
+    }
+  }
+}
+
+/*
 * Check if the player's founded word is the right one
 * @param  {Object}  wordObj   Client word object
 * @return {Int}    Points scored by the player. If return 0, it's just the wrong word :)
