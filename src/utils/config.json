@@ -1,36 +1,50 @@
 {
   "GRID_PROVIDER": {
-    "PROVIDER_ADDR": "https://cors-anywhere.herokuapp.com/https://rcijeux.fr/drupal_game/notretemps",
-    "PROVIDER_EXTENSION": ".mfj",
-    "GRIDS": {
-      "themed": {
-        "root": "/mflechest/grids/mflechest_",
-        "ranges": {
-          "0": [125, 385]
+    "default": {
+      "PROVIDER_ADDR": "https://cors-anywhere.herokuapp.com/https://rcijeux.fr/drupal_game/notretemps",
+      "PROVIDER_EXTENSION": ".mfj",
+      "GRIDS": {
+        "themed": {
+          "root": "/mflechest/grids/mflechest_",
+          "ranges": {
+            "0": [125, 385]
+          }
+        },
+        "giantthemed": {
+          "root": "/mflechesgt/grids/mflechesgt_",
+          "ranges": {
+            "0": [27, 77]
+          }
+        },
+        "giant": {
+          "root": "/mflechesg/grids/mflechesg_",
+          "ranges": {
+            "1": [1, 170],
+            "2": [1, 170],
+            "3": [1, 112],
+            "4": [1, 57]
+          }
+        },
+        "regular": {
+          "root": "/mfleches/grids/mfleches_",
+          "ranges": {
+            "1": [250, 1934],
+            "2": [250, 1934],
+            "3": [250, 1934],
+            "4": [250, 1934]
+          }
         }
-      },
-      "giantthemed": {
-        "root": "/mflechesgt/grids/mflechesgt_",
-        "ranges": {
-          "0": [27, 77]
-        }
-      },
-      "giant": {
-        "root": "/mflechesg/grids/mflechesg_",
-        "ranges": {
-          "1": [1, 170],
-          "2": [1, 170],
-          "3": [1, 112],
-          "4": [1, 57]
-        }
-      },
-      "regular": {
-        "root": "/mfleches/grids/mfleches_",
-        "ranges": {
-          "1": [250, 1934],
-          "2": [250, 1934],
-          "3": [250, 1934],
-          "4": [250, 1934]
+      }
+    },
+    "custom": {
+      "PROVIDER_ADDR": "./custom",
+      "PROVIDER_EXTENSION": ".mfj",
+      "GRIDS": {
+        "regular": {
+          "root": "/",
+          "ranges": {
+            "0": [0, 0]
+          }
         }
       }
     }

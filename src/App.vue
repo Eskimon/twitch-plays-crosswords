@@ -82,12 +82,16 @@ export default {
   },
   mounted() {
     let urlParams = new URLSearchParams(window.location.search);
+    if(!urlParams.has('provider')) {
+      return;
+    }
     // Try to load new grid if any in URL
     let url_force = parseInt(urlParams.get('force')) || 0;
     let url_themed = urlParams.get('themed') === 'true';
     let url_giant = urlParams.get('giant') === 'true';
     let url_grid = parseInt(urlParams.get('grid')) || null;
-    this.gridKey = this.getGridAddr(url_force, url_giant, url_themed, url_grid);
+    let url_provider = urlParams.get('provider');
+    this.gridKey = this.getGridAddr(url_force, url_giant, url_themed, url_grid, url_provider);
   },
   computed: {
     getDomain() {
@@ -182,6 +186,8 @@ export default {
           this.gridKey = this.getGridAddr(0, true, true);
         } else if(message === '!grille t') {
           this.gridKey = this.getGridAddr(0, false, true);
+        } else if(message === '!grille 0 custom') {
+          this.gridKey = this.getGridAddr(0, false, false, null, 'custom');
         }
       }
 
@@ -192,43 +198,44 @@ export default {
         this.$refs.grid.checkWord(name, guess, parseInt(message), userstate.color);
       }
     },
-    getGridAddr(force=1, giant=false, themed=false, defaultId=null) {
+    getGridAddr(force=1, giant=false, themed=false, defaultId=null, provider='default') {
+      let config = this.config[provider];
       let root = '';
       let rmin = 0;
       let rmax = 0;
       force = force.toString();
       // Find id range depending on grid type
       if(giant && !themed) {
-        rmin = this.config["GRIDS"]["giant"]["ranges"][force][0];
-        rmax = this.config["GRIDS"]["giant"]["ranges"][force][1];
-        root = this.config["GRIDS"]["giant"]["root"];
+        rmin = config["GRIDS"]["giant"]["ranges"][force][0];
+        rmax = config["GRIDS"]["giant"]["ranges"][force][1];
+        root = config["GRIDS"]["giant"]["root"];
       } else if(themed && !giant) {
-        rmin = this.config["GRIDS"]["themed"]["ranges"][0][0];
-        rmax = this.config["GRIDS"]["themed"]["ranges"][0][1];
-        root = this.config["GRIDS"]["themed"]["root"];
+        rmin = config["GRIDS"]["themed"]["ranges"][0][0];
+        rmax = config["GRIDS"]["themed"]["ranges"][0][1];
+        root = config["GRIDS"]["themed"]["root"];
         force = '0';
       } else if(themed && giant) {
-        rmin = this.config["GRIDS"]["giantthemed"]["ranges"][0][0];
-        rmax = this.config["GRIDS"]["giantthemed"]["ranges"][0][1];
-        root = this.config["GRIDS"]["giantthemed"]["root"];
+        rmin = config["GRIDS"]["giantthemed"]["ranges"][0][0];
+        rmax = config["GRIDS"]["giantthemed"]["ranges"][0][1];
+        root = config["GRIDS"]["giantthemed"]["root"];
         force = '0';
       } else {
-        rmin = this.config["GRIDS"]["regular"]["ranges"][force][0];
-        rmax = this.config["GRIDS"]["regular"]["ranges"][force][1];
-        root = this.config["GRIDS"]["regular"]["root"];
+        rmin = config["GRIDS"]["regular"]["ranges"][force][0];
+        rmax = config["GRIDS"]["regular"]["ranges"][force][1];
+        root = config["GRIDS"]["regular"]["root"];
       }
       let gridId = defaultId;
       if(!gridId)
         gridId = Math.floor(rmin + (Math.random() * Math.floor(rmax - rmin))).toString();
       gridId = '_' + gridId;
-      let address = this.config.PROVIDER_ADDR + root + force + gridId + this.config.PROVIDER_EXTENSION;
-      this.updateURL(gridId.substr(1), giant, themed, force);
+      let address = config.PROVIDER_ADDR + root + force + gridId + config.PROVIDER_EXTENSION;
+      this.updateURL(gridId.substr(1), giant, themed, force, provider);
       // Update url
       return address;
     },
-    updateURL(gridId, giant, themed, force) {
+    updateURL(gridId, giant, themed, force, provider) {
       let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?channel=${this.channel}`;
-      newurl += `&grid=${gridId}&giant=${giant}&themed=${themed}&force=${force}`;
+      newurl += `&grid=${gridId}&giant=${giant}&themed=${themed}&force=${force}&provider=${provider}`;
       window.history.pushState({ path:newurl }, '', newurl);
     },
   },
