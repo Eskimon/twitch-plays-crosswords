@@ -4,6 +4,7 @@
       <strong class="error" v-show="error">{{ error }}</strong>
       <span>Temps écoulé <strong>{{ elapsed }}</strong></span>
       <span>Mots restants <strong>{{ remaining }}</strong></span>
+      <button @click="resetZoom">🔎</button>
     </div>
     <div
       v-if="grid"
@@ -137,6 +138,10 @@ export default {
         this.$emit('wordfound', {player, points, color});
         return;
       }
+    },
+    resetZoom() {
+      this.panzoom.moveTo(0, 0);
+      this.panzoom.zoomAbs(0, 0, 1);
     }
   },
   destroyed() {
