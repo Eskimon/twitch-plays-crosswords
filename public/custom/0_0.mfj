@@ -1,0 +1,106 @@
+var gamedata = {
+	titre: "test_test",
+	legende: "",
+	force: "2",
+	nbcaseslargeur: 16,
+	nbcaseshauteur: 15,
+	grille: [
+		"dcHcBcAnTnAbbcTb",
+		"AMIaAMBROISIEiHO",
+		"zbTbSiZAMBIENNES",
+		"aAMATEURaIOaDIRT",
+		"aMARIOzEiZNiLEMS",
+		"sANGOLAiDAiAEROb",
+		"IDaONIaPIaABSiDA",
+		"dObNaEPISaHUSKYS",
+		"FUTbbNiCHAUSSONS",
+		"sEROSaPROzRzPaAA",
+		"PRISEiHONNIbAaMS",
+		"zbNbiMISOziECRIS",
+		"sZELDAiSRiETEaQI",
+		"NEaEUROaERGzaFUN",
+		"aNIDSaNIDHOGGaES",
+	],
+	// def avec % = jeux vidéo
+	definitions: [
+		["Qui vous", "veut du", "bien"],  // AMI
+		["%Poison et", "tournevis"],  // *HITMAN
+		["%The Kid", "à l'isom-","étrique"],  // *BASTION
+		["%Plongée", "reposante"],  // *ABZU
+		["C'est sa", "case"],  // TOM
+		["Est cher"],  // RARE
+		["Genre de", "chouette"],  // ASION
+		["Île de", "fête"],  // IBIZA
+		["C'est-à-dire"],  // IE
+		["%Conquête", "spaciale"],  // *ENDLESS SPACE
+		["Science", "du chaud", "et froid"],  // THERMODYNAMIQUE
+		["Armées", "féodales"],  // OSTS
+		["Plante", "allergène"],  // AMBROISIE
+		["Holmium"],  // HO
+		["%Action RPG", "Japonais"],  // *NIER (ou NIER)
+		["Apaiser"],  // AMADOUER
+		["Gaz rare"],  // ARGON
+		["Habitantes", "d'Afrique", "australe"],  // ZAMBIENNES
+		["Force de", "tempête"],  // EOLIEN
+		["Dilettante"],  // AMATEUR
+		["Transformée", "en bovin"],  // IO
+		["%Course", "poussièreuse"],  // *DIRT
+		["%It's me !"],  // MARIO
+		["Comptoir", "de bar"],  // ZN
+		["%Cœur", "parlant"],  // *DISHONORED
+		["Véhicules", "lunaires"],  // LEMS
+		["Débordement"],  // ABUS
+		["Pays", "d'Afrique"],  // ANGOLA
+		["Ça latin"],  // ID
+		["Oui russe"],  // DA
+		["%Logimage"],  // *PICROSS
+		["Nautique", "ou navale"],  // AERO
+		["Hébété"],  // AHURI
+		["Tueurs"],  // ASSASSINS
+		["Démon", "japonais"],  // ONI
+		["Nombre", "transcendant"],  // PI
+		["Système", "de frein"],  // ABS
+		["Demi cheval", "enfantin"],  // DA
+		["Assommé"],  // KO
+		["En chêne"],  // FUT
+		["%Trois âmes", "liées"],  // *TRINE
+		["Mèches", "rebelles"],  // EPIS
+		["Tirent", "les traineaux"],  // HUSKYS
+		["Instrument", "de musique", "idiophone"],  // OS
+		["Sélénium"],  // SE
+		["Aux pommes"],  // CHAUSSONS
+		["Lettre", "grecque"],  // PHI
+		["Epoux", "de Psyché"],  // EROS
+		["On s'y", "accroche"],  // PRISE
+		["En faveur", "de"],  // PRO
+		["1er fleuve", "de France"],  // AA
+		["Méprisé"],  // HONNI
+		["Code du", "Maroc"],  // MAR
+		["N'est pas d'ici"],  // ET
+		["Vitesse"],  // MS
+		["Méditation"],  // ZEN
+		["Diode qui", "brille"],  // LED
+		["Aliment", "japonais"],  // MISO
+		["Dettes"],  // DUS
+		["J'énonce", "sur", "feuille"],  // ECRIS
+		["Moi"],  // EGO
+		["%Lien non", "éponyme"],  // ZELDA
+		["En vie"],  // NE
+		["Strontium"],  // SR
+		["Monoxyde","d'azote"],  // ON
+		["Saison"],  // ETE
+		["Rhodium"],  // RH
+		["Intelligence?"],  // QI
+		["Monnaie"],  // EURO
+		["Désert","de dune"],  // ERG
+		["Drôle"],  // FUN
+		["De guêpes", "ou d'oiseaux"],  // NIDS
+		["%Duel à","l'épée"],  // *NIDHOGG
+		["Einsteinium"]	// ES
+	],
+		spountzV: [],
+		spountzH: [],
+		concours: [],
+		enonceconcours: "",
+		photos: [],
+};
