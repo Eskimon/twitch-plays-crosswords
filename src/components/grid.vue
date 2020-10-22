@@ -13,9 +13,16 @@
     >
       <template v-for="cell in grid.cases">
         <case-letter v-if="cell.type === 2" :value="cell" :key="`case-${cell.pos}`"></case-letter>
-        <case-description v-if="cell.type === 3" :value="cell" :grid="grid" :key="`case-${cell.pos}`" @guess="tryGuess"></case-description>
+        <case-description v-if="cell.type === 3" :value="cell" :grid="grid" :key="`case-${cell.pos}`" @guess="promptGuess"></case-description>
         <case-empty v-if="cell.type === 4" :key="`case-${cell.pos}`"></case-empty>
       </template>
+    </div>
+
+    <div class="modal guess" v-show="guess.show" @click="guess.show = false">
+      <div class="inner" @click.stop="">
+        <p>{{ guess.prompt }}</p>
+        <input type="text" v-model="guess.input" @keyup.enter="tryGuess">
+      </div>
     </div>
   </div>
 </template>
@@ -40,7 +47,12 @@ export default {
   data() {
     return {
       error: '',
-      guess: '',
+      guess: {
+        show: false,
+        input: '',
+        position: 0,
+        prompt: '',
+      },
       gm: null,
       grid: null,
 
@@ -109,10 +121,15 @@ export default {
       this.grid = this.gm.getGrid();
       this.remaining = this.gm.getNbRemainingWords();
     },
-    tryGuess(args) {
-      let guess = prompt(args.def);
-      if(guess)
-        this.checkWord(this.player, guess, args.idx, '#7F7F7F');
+    promptGuess(args) {
+      this.guess.prompt = args.def;
+      this.guess.input = '';
+      this.guess.position = args.idx;
+      this.guess.show = true;
+    },
+    tryGuess() {
+      this.checkWord(this.player, this.guess.input, this.guess.position, '#7F7F7F');
+      this.guess.show = false;
     },
     checkWord(player, guess, idx, color) {
       guess = tools.slugify(guess).toUpperCase();
@@ -181,5 +198,15 @@ export default {
 
 .case {
   border: 1px solid #ff0000;
+}
+
+.modal.guess {
+  background: rgba(0, 0, 0, 0.1);
+}
+.modal.guess .inner {
+  width: 20%;
+  margin: auto;
+  padding: 20px 30px;
+  background: #ddd;
 }
 </style>

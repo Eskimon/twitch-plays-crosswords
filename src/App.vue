@@ -19,6 +19,7 @@
           </li>
         </ul>
         <iframe
+          v-if="channel"
           frameborder="0"
           id="tchat"
           scrolling="true"
@@ -27,6 +28,16 @@
           width="100%"
         >
         </iframe>
+      </div>
+    </div>
+
+    <div class="modal" v-show="!channel">
+      <div class="inner">
+        <p>Pour pouvoir jouer, il vous faut tout d'abord préciser le nom de la chaîne Twitch dont le chat sera utilisé pour lire les réponses des spectateurs.</p>
+
+        <p>Quelle est le nom de la chaîne Twitch que vous souhaitez utiliser ?</p>
+
+        <input type="text" v-model="inputChannel" @keyup.enter="loadChannel">
       </div>
     </div>
   </div>
@@ -49,6 +60,8 @@ export default {
       scoreboard: {},
       channel: '',
       gridKey: 0,
+
+      inputChannel: '',
 
       konami: null,
       config: config.GRID_PROVIDER,
@@ -232,6 +245,10 @@ export default {
       newurl += `&grid=${gridId}&giant=${giant}&themed=${themed}&force=${force}&provider=${provider}`;
       window.history.pushState({ path:newurl }, '', newurl);
     },
+    loadChannel() {
+      let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?channel=${this.inputChannel}`;
+      window.location = newurl;
+    }
   },
 }
 </script>
@@ -267,5 +284,31 @@ body {
 
 .score ul li {
   list-style-type: decimal;
+}
+
+.modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, .7);
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  z-index: 1000;
+}
+
+.inner {
+  width: 25%;
+  margin: auto;
+  padding: 30px 50px;
+  background: #ddd;
+  border-radius: 20px;
+  border: solid 1px #444;
+}
+
+.inner input[type=text] {
+  width: 100%;
 }
 </style>
