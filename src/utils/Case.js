@@ -31,6 +31,7 @@ function DescriptionCase(Position, Content) {
   this.pos = Position;
   this.value = Content;
   this.type = enums.CaseType.Description;
+  this.themed = 0;
 
   // If the content letter is a letter greater than 'd', we will have a frame with 2 descriptions inside
   this.nbDesc = (Content > 'd') ? 2 : 1;
@@ -66,11 +67,14 @@ util.inherits(EmptyCase, Case);
 */
 DescriptionCase.prototype.setDescription = function (description) {
   var desc;
-
   // If the first desc cell is available
   if (this.desc[0] == null) {
     // Replace \n by <br/>
     desc = description.replace(/\n/gi, '<br/>');
+    if(desc.charAt(0) === '%') {
+      this.themed |= 0x1;
+      desc = desc.substr(1);
+    }
 
     this.nbLines += description.split('\n').length - 1;
     this.desc[0] = desc;
@@ -80,6 +84,10 @@ DescriptionCase.prototype.setDescription = function (description) {
   else if ((this.nbDesc == 2) && (this.desc[1] == null)) {
     // Replace \n by <br/>
     desc = description.replace(/\n/gi, '<br/>');
+    if(desc.charAt(0) === '%') {
+      this.themed |= 0x2;
+      desc = desc.substr(1);
+    }
 
     this.nbLines += description.split('\n').length - 1;
     this.desc[1] = desc;

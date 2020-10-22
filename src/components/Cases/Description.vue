@@ -12,7 +12,7 @@
         v-for="(def, idx) in value.desc"
         :key="`${value.pos}-def-${idx}`"
         v-html="def"
-        :class="`defsize-${value.nbLines}`"
+        :class="`defsize-${value.nbLines} ${(value.themed & (idx + 1)) ? 'themed': ''}`"
         @click="triggerGuess(idx)"
       >
       </span>
@@ -60,6 +60,10 @@ export default {
   position: relative;
 }
 
+.def .themed {
+  background: #cacafe;
+}
+
 .def {
   width: 100%;
   height: 100%;
@@ -94,12 +98,13 @@ export default {
 }
 
 .cellId {
-  position: absolute;
-  padding: 4px;
-  text-align: left;
+  /* position: absolute; */
+  /* padding: 4px; */
+  /* text-align: left; */
   font-size: 11px;
   color: #666;
   line-height: normal;
+  align-self: center;
 }
 
 .arrow {
@@ -114,30 +119,33 @@ export default {
 }
 
 .arrow-0 {
-  left: 100%;
+  left: calc(100% + 2px);
   justify-content: center;
 }
 .arrow-0::after {
   position: absolute;
-  left: 0;
+  left: -2px;
   content: '→';
+  line-height: normal;
 }
 
 .arrow-1 {
-  left: 100%;
+  left: calc(100% + 2px);;
   justify-content: center;
 }
 .arrow-1::after {
   position: absolute;
-  left: 0;
+  left: -4px;
   content: '↴';
+  line-height: normal;
 }
 
 .arrow-2 {
-  top: 100%;
+  top: calc(100% + 2px);
 }
 .arrow-2 .cellId {
-  align-self: center;
+  width: 100%;
+  text-align: center;
 }
 .arrow-2::after {
   content: '↓';
@@ -145,13 +153,16 @@ export default {
   width: 100%;
   text-align: center;
   line-height: 12px;
+  top: -1px;
+  position: absolute;
 }
 
 .arrow-3 {
-  top: 100%;
+  top: calc(100% + 2px);
 }
 .arrow-3 .cellId {
-  align-self: center;
+  width: 100%;
+  text-align: center;
 }
 .arrow-3::after {
   content: '↳';
@@ -159,15 +170,18 @@ export default {
   width: 100%;
   text-align: center;
   line-height: 12px;
+  top: -1px;
+  position: absolute;
 }
 
 .arrow-4 {
-  left: 100%;
+  left: calc(100% + 2px);
   justify-content: center;
 }
 .arrow-4::after {
   position: absolute;
-  left: 0;
+  left: -2px;
   content: '→';
+  line-height: normal;
 }
 </style>
