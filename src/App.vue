@@ -162,32 +162,23 @@ export default {
       }
       console.log('message received', message, name);
       if(userstate.username === this.channel || userstate.mod || userstate.username === 'eskimon') {
-        message = message.trimRight();
+        message = message.trim();
         if(message === '!reset') {
           localStorage.setItem('score', '{}');
           this.scoreboard = {};
-        } else if(message === '!grille g4') {
-          this.gridKey = this.getGridAddr(4, true, false);
-        } else if(message === '!grille g3') {
-          this.gridKey = this.getGridAddr(3, true, false);
-        } else if(message === '!grille g2') {
-          this.gridKey = this.getGridAddr(2, true, false);
-        } else if(message === '!grille g1') {
-          this.gridKey = this.getGridAddr(1, true, false);
-        } else if(message === '!grille 4') {
-          this.gridKey = this.getGridAddr(4, false, false);
-        } else if(message === '!grille 3') {
-          this.gridKey = this.getGridAddr(3, false, false);
-        } else if(message === '!grille 2') {
-          this.gridKey = this.getGridAddr(2, false, false);
-        } else if(message === '!grille 1') {
-          this.gridKey = this.getGridAddr(1, false, false);
-        } else if(message === '!grille gt') {
-          this.gridKey = this.getGridAddr(0, true, true);
-        } else if(message === '!grille t') {
-          this.gridKey = this.getGridAddr(0, false, true);
-        } else if(message === '!grille 0 custom') {
-          this.gridKey = this.getGridAddr(0, false, false, null, 'custom');
+        } else if(message.substr(0, 8) === '!grille ') {
+          // Parse command
+          let matcher = message.match(/^!grille\s+([g|t]?)\s*([1-4])\s?([a-z]*)\s?(\d{0,4})$/);
+          if(!matcher) {
+            return;
+          }
+          console.log("matcher: ", matcher);
+          let giant = matcher[1] === 'g';
+          let themed = matcher[1] === 't';
+          let force = matcher[2];
+          let provider = matcher[3] || 'default';
+          let id = matcher[4] || null;
+          this.gridKey = this.getGridAddr(force, giant, themed, id, provider, id);
         }
       }
 
@@ -200,6 +191,9 @@ export default {
     },
     getGridAddr(force=1, giant=false, themed=false, defaultId=null, provider='default') {
       let config = this.config[provider];
+      if(provider === 'custom') {
+        force = 0;
+      }
       let root = '';
       let rmin = 0;
       let rmax = 0;
