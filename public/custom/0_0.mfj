@@ -32,7 +32,7 @@ var gamedata = {
 		["Genre de", "chouette"],  // ASION
 		["Île de", "fête"],  // IBIZA
 		["C'est-à-dire"],  // IE
-		["%Conquête", "spaciale"],  // *ENDLESS SPACE
+		["%Conquête", "spatiale"],  // *ENDLESS SPACE
 		["Science", "du chaud", "et froid"],  // THERMODYNAMIQUE
 		["Armées", "féodales"],  // OSTS
 		["Plante", "allergène"],  // AMBROISIE
@@ -60,15 +60,15 @@ var gamedata = {
 		["Démon", "japonais"],  // ONI
 		["Nombre", "transcendant"],  // PI
 		["Système", "de frein"],  // ABS
-		["Demi cheval", "enfantin"],  // DA
+		["Demi", "cheval", "enfantin"],  // DA
 		["Assommé"],  // KO
 		["En chêne"],  // FUT
 		["%Trois âmes", "liées"],  // *TRINE
 		["Mèches", "rebelles"],  // EPIS
-		["Tirent", "les traineaux"],  // HUSKYS
+		["Tirent", "les", "traineaux"],  // HUSKYS
 		["Instrument", "de musique", "idiophone"],  // OS
 		["Sélénium"],  // SE
-		["Aux pommes"],  // CHAUSSONS
+		["Aux", "pommes"],  // CHAUSSONS
 		["Lettre", "grecque"],  // PHI
 		["Epoux", "de Psyché"],  // EROS
 		["On s'y", "accroche"],  // PRISE
@@ -76,7 +76,7 @@ var gamedata = {
 		["1er fleuve", "de France"],  // AA
 		["Méprisé"],  // HONNI
 		["Code du", "Maroc"],  // MAR
-		["N'est pas d'ici"],  // ET
+		["N'est", "pas", "d'ici"],  // ET
 		["Vitesse"],  // MS
 		["Méditation"],  // ZEN
 		["Diode qui", "brille"],  // LED
@@ -94,7 +94,7 @@ var gamedata = {
 		["Monnaie"],  // EURO
 		["Désert","de dune"],  // ERG
 		["Drôle"],  // FUN
-		["De guêpes", "ou d'oiseaux"],  // NIDS
+		["De", "guêpes", "ou", "d'oiseaux"],  // NIDS
 		["%Duel à","l'épée"],  // *NIDHOGG
 		["Einsteinium"]	// ES
 	],
