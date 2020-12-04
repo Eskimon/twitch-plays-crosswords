@@ -79,7 +79,7 @@ export default {
     this.loadScore();
     // Get channel
     let urlParams = new URLSearchParams(window.location.search);
-    this.channel = urlParams.get('channel');
+    this.channel = urlParams.get('channel').toLowerCase();
     // Connect to chat
     const tmi = require('tmi.js');
     this.client = new tmi.Client({
