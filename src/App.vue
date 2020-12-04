@@ -79,7 +79,7 @@ export default {
     this.loadScore();
     // Get channel
     let urlParams = new URLSearchParams(window.location.search);
-    this.channel = urlParams.get('channel').toLowerCase();
+    this.channel = urlParams.get('channel');
     // Connect to chat
     const tmi = require('tmi.js');
     this.client = new tmi.Client({
@@ -174,7 +174,7 @@ export default {
         name += ` (${userstate.username})`;
       }
       console.log('message received', message, name);
-      if(userstate.username === this.channel || userstate.mod || userstate.username === 'eskimon') {
+      if(userstate.username === this.channel.toLowerCase() || userstate.mod || userstate.username === 'eskimon') {
         message = message.trim();
         if(message === '!reset') {
           localStorage.setItem('score', '{}');
