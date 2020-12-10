@@ -47,7 +47,8 @@
 import config from './utils/config.json'
 
 import Grid from './components/grid.vue'
-import KonamiCode from './utils/konami';
+// import KonamiCode from './utils/konami';
+import Konami from 'konami'
 
 export default {
   name: 'App',
@@ -68,10 +69,13 @@ export default {
     };
   },
   created() {
-    this.konami = new KonamiCode();
-    this.konami.listen(() => {
-      // Easter egg!!!
-      console.log( "konami code!" );
+    // this.konami = new KonamiCode();
+    // this.konami.listen(() => {
+    //   // Easter egg!!!
+    //   console.log( "konami code!" );
+    //   this.$refs.grid.konami();
+    // });
+    this.konami = new Konami(() => { 
       this.$refs.grid.konami();
     });
 
