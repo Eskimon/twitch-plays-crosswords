@@ -138,7 +138,7 @@ export default {
 }
 .arrow-1::after {
   position: absolute;
-  left: -4px;
+  left: -2px;
   content: '↴';
   line-height: normal;
 }
