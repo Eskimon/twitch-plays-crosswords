@@ -105,6 +105,9 @@ export default {
   color: #666;
   line-height: normal;
   align-self: center;
+  position: relative;
+  top: -15px;
+  left: 15px;
 }
 
 .arrow {
