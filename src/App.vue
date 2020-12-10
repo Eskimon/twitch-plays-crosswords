@@ -115,10 +115,9 @@ export default {
       let items = Object.keys(this.scoreboard).map((key) => {
         return [key, this.scoreboard[key]];
       });
-
       // Sort the array based on the second element (the score)
       items.sort((first, second) => {
-        return second[1] - first[1];
+        return second[1].score - first[1].score;
       });
       return items;
     }
@@ -284,6 +283,7 @@ body {
 
 .score ul li {
   list-style-type: decimal;
+  text-shadow: 0 0 5px #fff;
 }
 
 .modal {
