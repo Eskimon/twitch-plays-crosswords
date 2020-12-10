@@ -270,6 +270,8 @@ GridManager.prototype.checkPlayerWord = function (wordObj, color, player) {
       _grid.cases[index].color = color;
       _grid.cases[index].player = player;
       points++;
+    } else {
+      return (-1);
     }
     index += jump;
   }
