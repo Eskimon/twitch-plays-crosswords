@@ -37,7 +37,7 @@ var gamedata = {
 		["Armées", "féodales"],  // OSTS
 		["Plante", "allergène"],  // AMBROISIE
 		["Holmium"],  // HO
-		["%Action RPG", "Japonais"],  // *NIER (ou NIER)
+		["%Automata"],  // *NIER (ou NIER)
 		["Apaiser"],  // AMADOUER
 		["Gaz rare"],  // ARGON
 		["Habitantes", "d'Afrique", "australe"],  // ZAMBIENNES
