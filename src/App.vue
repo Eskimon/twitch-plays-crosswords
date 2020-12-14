@@ -9,11 +9,11 @@
         :key="`grid-${gridKey}`"
       ></grid>
       <div class="score">
-        <ul>
+        <ul id="scoreList">
           <li
             v-for="player in getScoreList"
             :key="`score-${player[0]}`"
-            :style="`color: ${scoreboard[player[0]].color}`"
+            :style="`color: ${scoreboard[player[0]].color ? scoreboard[player[0]].color : '#FFFFFF'}`"
           >
             {{ player[0] }} <small>({{ scoreboard[player[0]].score }})</small>
           </li>
@@ -68,7 +68,7 @@ export default {
     };
   },
   created() {
-    this.konami = new Konami(() => { 
+    this.konami = new Konami(() => {
       this.$refs.grid.konami();
     });
 
@@ -177,16 +177,16 @@ export default {
           this.scoreboard = {};
         } else if(message.substr(0, 8) === '!grille ') {
           // Parse command
-          let matcher = message.match(/^!grille\s+([g|t]?)\s*([1-4])\s?([a-z]*)\s?(\d{0,4})$/);
+          let matcher = message.match(/^!grille\s+([g]?)([t]?)\s*([1-4])\s?([a-z]*)\s?(\d{0,4})$/);
           if(!matcher) {
             return;
           }
           console.log("matcher: ", matcher);
           let giant = matcher[1] === 'g';
-          let themed = matcher[1] === 't';
-          let force = matcher[2];
-          let provider = matcher[3] || 'default';
-          let id = matcher[4] || null;
+          let themed = matcher[2] === 't';
+          let force = matcher[3];
+          let provider = matcher[4] || 'default';
+          let id = matcher[5] || null;
           this.gridKey = this.getGridAddr(force, giant, themed, id, provider, id);
         }
       }
@@ -276,11 +276,21 @@ body {
 .score {
   background: #18181b;
   position: relative;
+  height: 100%;
+}
+
+.score ul {
+  height: 40%;
+  overflow-y: scroll;
+}
+
+.score iframe {
+  height: 60%;
 }
 
 .score ul li {
   list-style-type: decimal;
-  text-shadow: 0 0 5px #fff;
+  /*text-shadow: 0 0 5px #fff;*/
 }
 
 .modal {

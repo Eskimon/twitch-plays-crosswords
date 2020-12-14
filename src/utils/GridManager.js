@@ -5,6 +5,7 @@ var enums   = require('./enums'),
 
 var _grid           = null, // the grid itself !
     _gridInfos      = null,
+    _gridMetadata   = null,
     _nbLetters      = 0,
     _maxPoints      = 0;
 
@@ -28,7 +29,17 @@ function GridManager() {
     provider: '',
     id:       0,
     level:    0,
-    nbWords:  0
+    nbWords:  0,
+    nbLetters: 0,
+  };
+
+  _gridMetadata = {
+    force: 0,
+    isThemed: false,
+    isGiant: false,
+    theme: '',
+    provider: 'default',
+    gridId: 0,
   };
 }
 
@@ -102,12 +113,20 @@ function parseGrid(callback, serverText) {
 
   grid.level = gamedata.force;
   _gridInfos.level = gamedata.force;
+  _gridInfos.nbLetters = 0;
 
   grid.nbWords = gamedata.definitions.length;
   _gridInfos.nbWords = gamedata.definitions.length;
 
   grid.nbLines = gamedata.nbcaseshauteur;
   grid.nbColumns = gamedata.nbcaseslargeur;
+
+  _gridMetadata.force = gamedata.force;
+  _gridMetadata.isThemed = gamedata.legende != '';
+  _gridMetadata.isGiant = 0;
+  _gridMetadata.theme = gamedata.titre;
+  _gridMetadata.provider = 0;
+  _gridMetadata.gridId = 0;
 
   // Load letters
   for (i in gamedata.grille){
@@ -116,6 +135,7 @@ function parseGrid(callback, serverText) {
       if (type == enums.CaseType.Letter) {
         grid.cases.push(new Case.LetterCase(currentCase++, gamedata.grille[i][j]));
         _nbLetters++;
+        _gridInfos.nbLetters++;
       } else if (type == enums.CaseType.Description) {
         grid.cases.push(new Case.DescriptionCase(currentCase++, gamedata.grille[i][j]));
       } else {
@@ -270,10 +290,13 @@ GridManager.prototype.checkPlayerWord = function (wordObj, color, player) {
       _grid.cases[index].color = color;
       _grid.cases[index].player = player;
       points++;
-    } else {
-      return (-1);
+      _nbLetters--;
+      _gridInfos.nbLetters--;
     }
     index += jump;
+  }
+  if(points === 0) {
+    return 0;
   }
 
   // Decrease word counter
@@ -295,6 +318,7 @@ GridManager.prototype.getGrid = function () {
 
   // Adding grid's informations
   clonedGrid.infos = _gridInfos;
+  clonedGrid.metadata = _gridMetadata;
 /*
   // Finally hide letters before send it to the players :)
   for (let index in clonedGrid.cases) {
@@ -314,11 +338,27 @@ GridManager.prototype.getGridInfos = function () {
 };
 
 /*
+* Return grid metadata
+* @return {Object}    The grid metadata object
+*/
+GridManager.prototype.getGridMetadata = function () {
+  return (_gridMetadata);
+};
+
+/*
 * To retreive the number of words still not found
 * @return {Int}    The number of words still available
 */
 GridManager.prototype.getNbRemainingWords = function () {
   return (_grid.nbWords);
+}
+
+/*
+* To retreive the number of letters still not found
+* @return {Int}    The number of letters still available
+*/
+GridManager.prototype.getNbRemainingLetters = function () {
+  return (_gridInfos.nbLetters);
 }
 
 /*

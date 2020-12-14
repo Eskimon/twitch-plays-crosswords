@@ -2,7 +2,7 @@
   <div
     class="case letter"
     :class="[value.dashed ? `dash-${value.dashed}` : '', value.available ? '' : 'found']"
-    :style="`color: ${value.color}`"
+    :style="`color: ${value.color ? value.color : '#000000'}`"
     :title="value.player"
   >
     {{ value.available ? '' : value.value }}

@@ -3,8 +3,10 @@
     <div class="gameInfo">
       <strong class="error" v-show="error">{{ error }}</strong>
       <span>Temps écoulé <strong>{{ elapsed }}</strong></span>
-      <span>Mots restants <strong>{{ remaining }}</strong></span>
+      <span>Lettres restantes <strong>{{ nbLetters }}</strong></span>
       <button @click="resetZoom">🔎</button>
+      <span>Force <strong>{{ metadata.force }}</strong></span>
+      <span v-show="metadata.isThemed">Thème : <strong>{{ metadata.theme }}</strong></span>
     </div>
     <div
       v-if="grid"
@@ -21,7 +23,7 @@
     <div class="modal guess" v-show="guess.show" @click="guess.show = false">
       <div class="inner" @click.stop="">
         <p>{{ guess.prompt }}</p>
-        <input type="text" v-model="guess.input" @keyup.enter="tryGuess">
+        <input ref="guessInput" type="text" v-model="guess.input" @keyup.enter="tryGuess">
       </div>
     </div>
   </div>
@@ -57,9 +59,19 @@ export default {
       grid: null,
 
       remaining: 0,
+      nbLetters: 0,
       elapsedRaw: 0,
       startedAt: null,
       panzoom: null,
+
+      metadata: {
+        force: 0,
+        isThemed: false,
+        isGiant: false,
+        theme: '',
+        provider: '',
+        gridId: 0,
+      },
     };
   },
   created() {
@@ -72,6 +84,15 @@ export default {
           console.error('[ERROR] Cannot retreive grid.');
         } else {
           this.refreshGrid();
+
+          let meta = this.gm.getGridMetadata();
+
+          this.metadata.force = meta.force;
+          this.metadata.isThemed = meta.isThemed;
+          this.metadata.isGiant = meta.isGiant;
+          this.metadata.theme = meta.theme;
+          this.metadata.provider = meta.provider;
+          this.metadata.gridId = meta.gridId;
 
           this.$nextTick(() => {
             let area = document.getElementById('grille');
@@ -120,12 +141,16 @@ export default {
     refreshGrid() {
       this.grid = this.gm.getGrid();
       this.remaining = this.gm.getNbRemainingWords();
+      this.nbLetters = this.gm.getNbRemainingLetters();
     },
     promptGuess(args) {
       this.guess.prompt = args.def;
       this.guess.input = '';
       this.guess.position = args.idx;
       this.guess.show = true;
+      this.$nextTick(() => {
+        this.$refs.guessInput.focus();
+      });
     },
     tryGuess() {
       this.checkWord(this.player, this.guess.input, this.guess.position, '#7F7F7F');
