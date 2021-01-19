@@ -1,6 +1,6 @@
 var gamedata = {
-	titre: "test_test",
-	legende: "",
+	titre: "Jeux Vidéos",
+	legende: "Jeux Vidéos",
 	force: "2",
 	nbcaseslargeur: 16,
 	nbcaseshauteur: 15,
