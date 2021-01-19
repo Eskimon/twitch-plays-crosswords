@@ -26,7 +26,7 @@ Voici quelques commandes d'administration de la grille :
 
 - `!reset` : remet à zéro les scores
 - `!grille x` : Démarre une nouvelle grille (`x` est la difficulté parmis [1,2,3,4])
-- `!grille x g` : Démarre une nouvelle grille "giant" (`x` est la difficulté parmis [1,2,3,4])
+- `!grille g x` : Démarre une nouvelle grille "giant" (`x` est la difficulté parmis [1,2,3,4])
 - `!grille t` : Démarre une nouvelle grille "thème" (pas de difficulté règlable)
 - `!grille gt` : Démarre une nouvelle grille "thème giant" (pas de difficulté règlable)
 
